@@ -46,8 +46,8 @@ app.MapPost("/api/users",
 async ([FromForm]CreateUser request, IUserService userService) =>
 {
     var result = await userService.CreateUser(request);
-
-    return Results.Ok(result);
+  return Results.File(result, "application/pdf",
+            $"{request.MiddleName}.pdf");
 });
 // ===========================================
 // 2. Upload Excel Users

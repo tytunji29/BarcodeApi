@@ -8,7 +8,7 @@ namespace BarcodeApi.Services;
 
 public interface IUserService
 {
-    Task<object> CreateUser(CreateUser request);
+   Task<byte[]> CreateUser(CreateUser request);
 
    // Task<List<object>> UploadUsers(IFormFile file);
 }
@@ -18,16 +18,18 @@ public class UserService : IUserService
 {
     private readonly AppDbContext _db;
     private readonly IWhatsAppService _whatsAppService;
+    private readonly IQrCodeService _qrCode;
 
     public UserService(
         AppDbContext db,
-        IWhatsAppService whatsAppService)
+        IWhatsAppService whatsAppService,IQrCodeService qrCode)
     {
         _db = db;
         _whatsAppService = whatsAppService;
+         _qrCode=qrCode;
     }
 
-    public async Task<object> CreateUser(CreateUser request)
+    public async Task<byte[]> CreateUser(CreateUser request)
     {
         var company = await _db.Companies
             .FirstOrDefaultAsync(x =>
@@ -94,12 +96,8 @@ var userImage = new UserImage
 
         // await _whatsAppService.SendWhatsAppMessage(user);
 
-        return new
-        {
-            user.Id,
-            user.FirstName,
-            Company = company.CompanyName
-        };
+      var res= await _qrCode.GeneratePermitPdf(user.Id);
+return res;
     }
 
 

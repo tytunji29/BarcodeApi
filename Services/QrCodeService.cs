@@ -15,8 +15,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BarcodeApi.Services;
 public interface IQrCodeService
-{
-    Task<byte[]> GeneratePermitPdf(Guid userId);
+{    Task<byte[]> GeneratePermitPdf(Guid userId);
 }
 
 public class QrCodeService : IQrCodeService
