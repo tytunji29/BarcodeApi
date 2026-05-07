@@ -1,6 +1,7 @@
 using BarcodeApi.Data;
 using BarcodeApi.Entities;
 using BarcodeApi.Entities.Request;
+using BarcodeApi.MVC;
 using ClosedXML.Excel;
 using Microsoft.EntityFrameworkCore;
 
@@ -53,6 +54,17 @@ public class UserService : IUserService
         var user = new User
         {
 
+ApplicationId=Guid.NewGuid(),
+BiometricCaptureDate=request.BiometricCaptureDate,
+LastRenewalDate=request.LastRenewalDate,
+Email = request.Email,
+Nin = request.Nin,
+Gender = request.Gender,
+PhoneNumber = request.PhoneNumber,
+Address = request.Address,
+Occupation = request.Occupation,
+ResidencePermitType = request.ResidencePermitType,
+PlaceOfBirth = request.PlaceOfBirth,
     ECerpacNumber = request.ECerpacNumber,
 
     DateOfExpiry = request.DateOfExpiry.ToUniversalTime(),
@@ -103,7 +115,57 @@ return res;
     }
 
 
-   
+public async Task<CerpacViewModel> GetDetial(Guid userId)
+{
+    var user = await _db.Users
+        .Include(x => x.Company)
+        .FirstOrDefaultAsync(x => x.Id == userId);
+
+    if (user == null)
+        return null;
+
+    var userimage = await _db.UserImages
+        .FirstOrDefaultAsync(x => x.UserId == userId);
+
+    return new CerpacViewModel
+    {
+        FullName = $"{user.FirstName} {user.LastName}",
+        DateOfBirth = user.DateOfBirth.ToString("yyyy-MM-dd"),
+        Nationality = user.Nationality ?? string.Empty,
+        PassportNumber = user.PassportNumber ?? string.Empty,
+
+        CerpacNumber = user.ECerpacNumber ?? string.Empty,
+          IssueDate = user.ValidityStartDate.ToString("yyyy-MM-dd") ?? string.Empty,
+        ExpiryDate = user.ValidityEndDate.ToString("yyyy-MM-dd") ?? string.Empty,
+
+        IssuingAuthority = user.Company?.CompanyName ?? string.Empty,
+        Status = user.Status ?? string.Empty,
+
+        BiometricCaptureDate = user.BiometricCaptureDate?.ToString("yyyy-MM-dd") ?? string.Empty,
+        LastRenewalDate = user.LastRenewalDate?.ToString("yyyy-MM-dd") ?? string.Empty,
+
+        ApplicationId = user.ApplicationId?.ToString() ?? string.Empty,
+        Email = user.Email ?? string.Empty,
+ ResidencePermitType = user.ResidencePermitType ?? string.Empty,
+
+
+        PlaceOfBirth = user.PlaceOfBirth ?? string.Empty,
+        Gender = user.Gender ?? string.Empty,
+        NinNumber = user.Nin ?? string.Empty,
+        PhoneNumber = user.PhoneNumber ?? string.Empty,
+        ResidentialAddress = user.Address ?? string.Empty,
+        Occupation = user.Occupation ?? string.Empty,     
+        ProfileInitials = GenerateInitials(user.FirstName, user.LastName)
+    };
+}
+
+private string GenerateInitials(string firstName, string lastName)
+{
+    var f = string.IsNullOrWhiteSpace(firstName) ? "" : firstName[0].ToString();
+    var l = string.IsNullOrWhiteSpace(lastName) ? "" : lastName[0].ToString();
+
+    return (f + l).ToUpper();
+}
 public async Task<string> ConvertToBase64(IFormFile file)
 {
     using var memoryStream = new MemoryStream();

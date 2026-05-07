@@ -23,4 +23,8 @@
     <PackageReference Include="ZXing.Net" Version="0.16.11" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="Views\**\*.cshtml" />
+  </ItemGroup>
+
 </Project>

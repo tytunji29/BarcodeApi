@@ -15,6 +15,12 @@ using ZXing.Common;
 var builder = WebApplication.CreateBuilder(args);
 
 // Swagger
+builder.Services.AddControllersWithViews()
+    .AddRazorOptions(options =>
+    {
+        options.ViewLocationFormats.Add("/MVC/Views/{1}/{0}.cshtml");
+        options.ViewLocationFormats.Add("/MVC/Views/Shared/{0}.cshtml");
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -103,4 +109,12 @@ app.MapGet("/api/users/sample-excel", () =>
 
 // var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 // app.Urls.Add($"http://0.0.0.0:{port}");
+
+// MVC
+ app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Verify}/{action=Index}/{id?}");
+
+app.MapDefaultControllerRoute();
+
 app.Run();

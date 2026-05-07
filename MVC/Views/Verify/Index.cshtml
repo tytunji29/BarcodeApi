@@ -1,0 +1,178 @@
+<!-- ==================== VIEW (Views/Cerpac/Details.cshtml) ==================== -->
+@model BarcodeApi.MVC.CerpacViewModel
+@{
+    Layout = null;
+    var qrData = ViewBag.QrCodeData as string ?? "#";
+    var appId = ViewBag.ApplicationId as string ?? "NIS/CERPAC/2025/04289";
+    var permitType = ViewBag.Type as string ?? "cerpac";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>NIS e-CERPAC | @Model.FullName - Resident Permit Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', system-ui, 'Plus Jakarta Sans', sans-serif; background: #f8fafc; }
+        .skeleton-pulse { background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 37%, #e2e8f0 63%); background-size: 400% 100%; animation: pulse-loading 1.4s ease infinite; border-radius: 0.375rem; }
+        @@keyframes pulse-loading { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+        .nis-gradient { background: linear-gradient(135deg, #0f973d 0%, #0b7a3a 100%); }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50 antialiased">
+    <main class="max-w-4xl mx-auto px-4 py-6 md:py-10 lg:px-6">
+        <div class="space-y-5">
+            <!-- Header with dynamic logo and app context -->
+            <div class="flex items-center justify-between flex-wrap gap-3">
+                <a href="/" class="flex items-center gap-1.5 transition hover:opacity-80">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Nigerian_Immigration_Service_Logo.png" 
+                         alt="Nigerian Immigration Service logo" class="h-12 w-auto object-contain"
+                         onerror="this.src='https://placehold.co/140x48?text=NIS'">
+                    <span class="text-lg font-semibold text-gray-800 hidden sm:inline-block">| e-CERPAC</span>
+                </a>
+                <div class="bg-gray-100 px-3 py-1.5 rounded-full text-xs font-mono text-gray-600 shadow-inner">
+                    @permitType.ToUpper() · @appId.Substring(0, Math.Min(12, appId.Length))...
+                </div>
+            </div>
+
+            <!-- PROFILE HEADER CARD with dynamic fields from Model -->
+            <div class="bg-white rounded-2xl border border-gray-100/80 shadow-sm overflow-hidden">
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 p-5 md:p-7 bg-zinc-50/40">
+                    <div class="flex flex-wrap items-center gap-5">
+                        <div class="relative">
+                            <div class="w-24 h-24 md:w-28 md:h-28 rounded-full bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center shadow-inner">
+                                <span class="text-3xl font-bold text-green-700">@Model.ProfileInitials</span>
+                            </div>
+                            <span class="absolute bottom-0 right-1 bg-green-600 rounded-full p-1 border-2 border-white"></span>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-0.5 rounded-full">CERPAC HOLDER</span>
+                            </div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight">@Model.FullName</h2>
+                            <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500">
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                                    @Model.Gender · @Model.DateOfBirth
+                                </span>
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                                    @Model.Email
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-2 text-xs text-gray-400 mt-1">
+                                <span>Application ID: @Model.ApplicationId</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- QR dynamic link -->
+                    <div class="bg-white p-3 rounded-xl border border-gray-200 shadow-sm text-center min-w-[130px] cursor-pointer hover:shadow-md transition" onclick="alert('Official QR: @qrData')">
+                        <div class="text-[10px] uppercase tracking-wider text-gray-400 mb-1">QR Code</div>
+                        <div class="w-20 h-20 mx-auto bg-gray-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-12 h-12 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" /></svg>
+                        </div>
+                        <div class="mt-1 text-[11px] font-mono text-green-700">SCAN TO VERIFY</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PERSONAL INFORMATION (dynamically bound) -->
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                <div class="border-b bg-gray-50/70 px-6 py-4">
+                    <h3 class="text-base font-semibold text-gray-800 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                        Personal Information
+                    </h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-5 gap-x-8 p-6">
+                    <div><div class="text-xs font-medium text-gray-400 uppercase tracking-wide">Full Name</div><div class="text-gray-800 font-medium mt-1">@Model.FullName</div></div>
+                    <div><div class="text-xs font-medium text-gray-400 uppercase tracking-wide">Gender / DOB</div><div class="text-gray-800 font-medium mt-1">@Model.Gender · @Model.DateOfBirth</div></div>
+                    <div><div class="text-xs font-medium text-gray-400 uppercase tracking-wide">Nationality</div><div class="text-gray-800 font-medium mt-1">@Model.Nationality</div></div>
+                    <div><div class="text-xs font-medium text-gray-400 uppercase tracking-wide">Place of Birth</div><div class="text-gray-800 font-medium mt-1">@Model.PlaceOfBirth</div></div>
+                    <div><div class="text-xs font-medium text-gray-400 uppercase tracking-wide">Passport / NIN</div><div class="text-gray-800 font-medium mt-1">@Model.PassportNumber / @Model.NinNumber</div></div>
+                    <div><div class="text-xs font-medium text-gray-400 uppercase tracking-wide">Phone Number</div><div class="text-gray-800 font-medium mt-1">@Model.PhoneNumber</div></div>
+                    <div><div class="text-xs font-medium text-gray-400 uppercase tracking-wide">Residential Address</div><div class="text-gray-800 font-medium mt-1">@Model.ResidentialAddress</div></div>
+                    <div><div class="text-xs font-medium text-gray-400 uppercase tracking-wide">Occupation</div><div class="text-gray-800 font-medium mt-1">@Model.Occupation</div></div>
+                </div>
+            </div>
+
+            <!-- CERPAC RESIDENCE PERMIT DETAILS (dynamic) -->
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                <div class="border-b bg-gray-50/70 px-6 py-4">
+                    <h3 class="text-base font-semibold text-gray-800 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.6A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                        CERPAC & Residence Permit Details
+                    </h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-5 gap-x-8 p-6">
+                    <div><div class="text-xs font-medium text-gray-400 uppercase tracking-wide">CERPAC Number</div><div class="text-gray-800 font-mono text-sm font-semibold tracking-wider mt-1">@Model.CerpacNumber</div></div>
+                    <div><div class="text-xs font-medium text-gray-400 uppercase tracking-wide">Residence Permit Type</div><div class="text-gray-800 font-medium mt-1">@Model.ResidencePermitType</div></div>
+                    <div><div class="text-xs font-medium text-gray-400 uppercase tracking-wide">Issue Date</div><div class="text-gray-800 font-medium mt-1">@Model.IssueDate</div></div>
+                    <div><div class="text-xs font-medium text-gray-400 uppercase tracking-wide">Expiry Date</div><div class="text-amber-700 font-semibold mt-1">@Model.ExpiryDate <span class="text-gray-400 text-xs ml-1">(@(Model.IsActive ? "Valid" : "Expired"))</span></div></div>
+                    <div><div class="text-xs font-medium text-gray-400 uppercase tracking-wide">Issuing Authority</div><div class="text-gray-800 font-medium mt-1">@Model.IssuingAuthority</div></div>
+                    <div><div class="text-xs font-medium text-gray-400 uppercase tracking-wide">Status</div><div class="inline-flex mt-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold @Model.StatusBadgeClass">@Model.Status</div></div>
+                    <div><div class="text-xs font-medium text-gray-400 uppercase tracking-wide">Biometric Capture Date</div><div class="text-gray-800 font-medium mt-1">@Model.BiometricCaptureDate</div></div>
+                    <div><div class="text-xs font-medium text-gray-400 uppercase tracking-wide">Last Renewal</div><div class="text-gray-800 font-medium mt-1">@Model.LastRenewalDate</div></div>
+                </div>
+            </div>
+
+            <!-- VERIFICATION SECTION -->
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                <div class="border-b bg-gray-50/70 px-6 py-4">
+                    <h3 class="text-base font-semibold text-gray-800 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.6A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                        Official Verification
+                    </h3>
+                </div>
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                        <div class="text-xs uppercase font-bold text-gray-500 tracking-wider">e-CERPAC QR verification</div>
+                        <div class="flex items-center gap-4 mt-3">
+                            <div class="w-16 h-16 bg-white border border-gray-300 rounded-md flex items-center justify-center">
+                                <svg class="w-8 h-8 text-gray-500" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h6v6h-6v-6z"/></svg>
+                            </div>
+                            <div><p class="text-sm text-gray-600">Scan QR on physical card or use dynamic code: <span class="font-mono text-xs">@appId</span></p></div>
+                        </div>
+                    </div>
+                    <div class="bg-green-50 rounded-xl p-4 border border-green-200">
+                        <div class="flex items-start gap-3">
+                            <svg class="w-6 h-6 text-green-700 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.6A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                            <div><p class="font-medium text-green-800">Digitally verified by NIS</p><p class="text-xs text-green-700 mt-1">Last sync: @DateTime.Now.ToString("dd MMM yyyy HH:mm")</p></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-6 pb-6 flex flex-wrap gap-3 border-t pt-5 border-gray-100">
+                    <a href="#" class="inline-flex items-center gap-2 px-5 py-2.5 bg-green-700 hover:bg-green-800 text-white text-sm font-medium rounded-lg transition shadow-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                        Download e-CERPAC
+                    </a>
+                    <a href="#" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-green-700 text-green-700 hover:bg-green-50 text-sm font-medium rounded-lg transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                        Share with employer
+                    </a>
+                    <a href="https://immigration.gov.ng" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.102m1.858-3.828a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.102" /></svg>
+                        Verify at NIS portal
+                    </a>
+                </div>
+            </div>
+
+            <div class="text-center text-[11px] text-gray-400 border-t pt-6 mt-4">
+                <p>© Nigeria Immigration Service — e-CERPAC Management System. Official electronic residence card record.<br> For inquiries: support@cerpac.immigration.gov.ng | Ref: @appId</p>
+            </div>
+        </div>
+    </main>
+    <div class="fixed bottom-4 right-4 z-50 hidden md:block pointer-events-none">
+        <div class="bg-white shadow-lg rounded-lg px-4 py-2 border-l-4 border-green-500 text-xs text-gray-600">✔️ Live NIS database sync</div>
+    </div>
+    <script>
+        // Optional interactive alert for QR
+        document.querySelector('.cursor-pointer')?.addEventListener('click', function(e) {
+            alert('Official QR verification data: @qrData');
+        });
+    </script>
+</body>
+</html>

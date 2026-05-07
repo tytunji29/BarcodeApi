@@ -214,7 +214,7 @@ private Cell CreateValueCell(string? text)
 }
  private async Task<byte[]> GenerateUserQrCode(Guid userId)
     {
-        var qrContent = $"https://yourdomain.com/users/{userId}";
+        var qrContent = $"http://localhost:5006/verify/index?applicationId={userId}";
 
         var writer = new BarcodeWriterPixelData
         {
