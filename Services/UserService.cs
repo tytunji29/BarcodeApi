@@ -10,7 +10,7 @@ namespace BarcodeApi.Services;
 public interface IUserService
 {
    Task<byte[]> CreateUser(CreateUser request);
-
+ Task<CerpacViewModel> GetDetial(Guid userId);
    // Task<List<object>> UploadUsers(IFormFile file);
 }
 
