@@ -31,6 +31,8 @@ public class User
     public string ResidentClass { get; set; }
 
     public string Designation { get; set; }
+    public string Status { get; set; }
+    public string PolicyNumber { get; set; }
 
     // FK
     public Guid CompanyId { get; set; }

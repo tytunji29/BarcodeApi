@@ -12,6 +12,10 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using BarcodeApi.Data;
 using Microsoft.EntityFrameworkCore;
+using iText.Layout.Properties;
+using iText.Layout.Borders;
+using iText.IO.Font.Constants;
+using iText.Kernel.Font;
 
 namespace BarcodeApi.Services;
 public interface IQrCodeService
@@ -29,10 +33,15 @@ public class QrCodeService : IQrCodeService
 
 public async Task<byte[]> GeneratePermitPdf(Guid userId)
 {
-    var user = await _db.Users.FirstOrDefaultAsync(x => x.Id == userId);
+    var user = await _db.Users
+        .Include(x => x.Company)
+        .FirstOrDefaultAsync(x => x.Id == userId);
 
     if (user == null)
         return null;
+
+    var userimage = await _db.UserImages
+        .FirstOrDefaultAsync(x => x.UserId == userId);
 
     var qrCodeBytes = await GenerateUserQrCode(user.Id);
 
@@ -42,48 +51,168 @@ public async Task<byte[]> GeneratePermitPdf(Guid userId)
     var pdf = new PdfDocument(writer);
     var document = new Document(pdf);
 
+    document.SetMargins(10, 10, 10, 10);
+
+    // =====================================================
+    // MAIN TABLE
+    // =====================================================
+
+    var mainTable = new Table(UnitValue.CreatePercentArray(new float[] { 70, 30 }))
+        .UseAllAvailableWidth();
+
+    // =====================================================
+    // LEFT SECTION
+    // =====================================================
+
+    var leftCell = new Cell();
+
     // ================= HEADER =================
-    document.Add(new Paragraph("NIGERIAN IMMIGRATION e-CERPAC")
-       //.setbo()
-        .SetFontSize(18)
-        .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
 
-    document.Add(new Paragraph("\n"));
+    var headerTable = new Table(UnitValue.CreatePercentArray(new float[] { 15, 85 }))
+        .UseAllAvailableWidth();
 
-    // ================= BODY =================
-    document.Add(new Paragraph($"Permit Number: {user.ECerpacNumber}"));
-    document.Add(new Paragraph($"First Name: {user.FirstName}"));
-    document.Add(new Paragraph($"Last Name: {user.LastName}"));
-    document.Add(new Paragraph($"Date of Birth: {user.DateOfBirth:dd MMM yyyy}"));
-    document.Add(new Paragraph($"Passport Number: {user.PassportNumber}"));
+    // LOGO
+    var logo = new Paragraph("🇳🇬")
+        .SetFontSize(40);
 
-    if (user.Company != null)
+    headerTable.AddCell(
+        new Cell()
+            .Add(logo)
+            .SetBorder(Border.NO_BORDER)
+    );
+
+    // HEADER TEXT
+    headerTable.AddCell(
+        new Cell()
+            .Add(new Paragraph("FEDERAL REPUBLIC OF NIGERIA")
+    .SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD))
+                .SetFontSize(20))
+            .Add(new Paragraph("Electronic Comprehensive Expatriate Residence Permit"))
+            .SetBorder(Border.NO_BORDER)
+    );
+
+    leftCell.Add(headerTable);
+
+    leftCell.Add(new Paragraph("\n"));
+
+    // ================= DETAILS TABLE =================
+
+    var detailsTable = new Table(UnitValue.CreatePercentArray(new float[] { 40, 60 }))
+        .UseAllAvailableWidth();
+
+    detailsTable.AddCell(CreateLabelCell("e-CERPAC:"));
+    detailsTable.AddCell(CreateValueCell(user.ECerpacNumber));
+
+    detailsTable.AddCell(CreateLabelCell("Insurance Policy Number:"));
+    detailsTable.AddCell(CreateValueCell(user.PolicyNumber));
+    detailsTable.AddCell(CreateLabelCell("First Name:"));
+    detailsTable.AddCell(CreateValueCell(user.FirstName));
+
+    detailsTable.AddCell(CreateLabelCell("Middle Name:"));
+    detailsTable.AddCell(CreateValueCell(user.MiddleName));
+    detailsTable.AddCell(CreateLabelCell("Last Name:"));
+    detailsTable.AddCell(CreateValueCell(user.LastName));
+
+    detailsTable.AddCell(CreateLabelCell("Date of Birth:"));
+    detailsTable.AddCell(CreateValueCell(user.DateOfBirth.ToString("dd MMM yyyy")));
+
+    detailsTable.AddCell(CreateLabelCell("Status:"));
+    detailsTable.AddCell(CreateValueCell(user.Status));
+
+    detailsTable.AddCell(CreateLabelCell("Validity:"));
+    detailsTable.AddCell(CreateValueCell($"{user.ValidityStartDate:dd MMM yyyy} - {user.ValidityEndDate:dd MMM yyyy}"));
+
+    leftCell.Add(detailsTable);
+
+    mainTable.AddCell(leftCell);
+
+    // =====================================================
+    // RIGHT SECTION
+    // =====================================================
+
+    var rightCell = new Cell();
+
+    rightCell.Add(
+        new Paragraph("e-CERPAC")
+    .SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD))
+            .SetFontSize(22)
+            .SetTextAlignment(TextAlignment.CENTER)
+    );
+
+    rightCell.Add(new Paragraph("\n"));
+
+    // ================= USER IMAGE =================
+
+    if (userimage != null && !string.IsNullOrWhiteSpace(userimage.ImageData))
     {
-        document.Add(new Paragraph($"Company: {user.Company.CompanyName}"));
-        //document.Add(new Paragraph($"Sponsor: {user.Company.SponsorName}"));
+        var base64 = userimage.ImageData;
+
+        if (base64.Contains(","))
+        {
+            base64 = base64.Split(',')[1];
+        }
+
+        byte[] imageBytes = Convert.FromBase64String(base64);
+
+        var profileImage =  new iText.Layout.Element.Image(ImageDataFactory.Create(imageBytes))
+            .SetWidth(150)
+            .SetHeight(150)
+            .SetHorizontalAlignment(HorizontalAlignment.CENTER);
+
+        rightCell.Add(profileImage);
     }
 
-    document.Add(new Paragraph("\n"));
+    rightCell.Add(new Paragraph("\n"));
 
     // ================= QR CODE =================
-    var imageData = ImageDataFactory.Create(qrCodeBytes);
-    var qrImage = new iText.Layout.Element.Image(imageData)
+
+    var qrImage =  new iText.Layout.Element.Image(ImageDataFactory.Create(qrCodeBytes))
         .SetWidth(150)
         .SetHeight(150)
-        .SetHorizontalAlignment(iText.Layout.Properties.HorizontalAlignment.CENTER);
+        .SetHorizontalAlignment(HorizontalAlignment.CENTER);
 
-    document.Add(qrImage);
+    rightCell.Add(qrImage);
+
+    mainTable.AddCell(rightCell);
+
+    // =====================================================
+    // ADD MAIN TABLE
+    // =====================================================
+
+    document.Add(mainTable);
 
     // ================= FOOTER =================
-    document.Add(new Paragraph($"\nGenerated on {DateTime.UtcNow:dd MMM yyyy}")
-        .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER)
-        .SetFontSize(10));
+
+    document.Add(
+        new Paragraph($"Generated on {DateTime.UtcNow:dd MMM yyyy}")
+            .SetFontSize(10)
+            .SetTextAlignment(TextAlignment.CENTER)
+    );
 
     document.Close();
 
     return stream.ToArray();
 }
-    private async Task<byte[]> GenerateUserQrCode(Guid userId)
+
+
+// =====================================================
+// HELPER METHODS
+// =====================================================
+
+private Cell CreateLabelCell(string text)
+{
+    return new Cell()
+        .Add(new Paragraph(text).SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD)))
+        .SetBorder(Border.NO_BORDER);
+}
+
+private Cell CreateValueCell(string? text)
+{
+    return new Cell()
+        .Add(new Paragraph(text ?? "-"))
+        .SetBorder(Border.NO_BORDER);
+}
+ private async Task<byte[]> GenerateUserQrCode(Guid userId)
     {
         var qrContent = $"https://yourdomain.com/users/{userId}";
 

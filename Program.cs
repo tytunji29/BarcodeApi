@@ -48,7 +48,7 @@ async ([FromForm]CreateUser request, IUserService userService) =>
     var result = await userService.CreateUser(request);
   return Results.File(result, "application/pdf",
             $"{request.MiddleName}.pdf");
-});
+}).DisableAntiforgery();
 // ===========================================
 // 2. Upload Excel Users
 // ===========================================

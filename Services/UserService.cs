@@ -55,7 +55,7 @@ public class UserService : IUserService
 
     ECerpacNumber = request.ECerpacNumber,
 
-    DateOfExpiry = request.DateOfExpiry,
+    DateOfExpiry = request.DateOfExpiry.ToUniversalTime(),
 
     PassportNumber = request.PassportNumber,
 
@@ -65,15 +65,17 @@ public class UserService : IUserService
 
     LastName = request.LastName,
 
-    DateOfBirth = request.DateOfBirth,
+    DateOfBirth = request.DateOfBirth.ToUniversalTime(),
 
     Sex = request.Sex,
+    PolicyNumber=$"GEN/{DateTime.UtcNow:yyyyMMdd}/{Random.Shared.Next(10000, 99999)}",
+    Status="Expatriate",
 
     Nationality = request.Nationality,
 
-    ValidityStartDate = request.ValidityStartDate,
+    ValidityStartDate = request.ValidityStartDate.ToUniversalTime(),
 
-    ValidityEndDate = request.ValidityEndDate,
+    ValidityEndDate = request.ValidityEndDate.ToUniversalTime(),
 
     ResidentClass = request.ResidentClass,
 
