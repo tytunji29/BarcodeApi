@@ -65,7 +65,9 @@ app.MapPost("/api/users/upload", async (IFormFile file, AppDbContext db) =>
         return Results.BadRequest("File is required");
 
     using var stream = new MemoryStream();
+    stream.Position = 0;
     await file.CopyToAsync(stream);
+    
 
     using var workbook = new XLWorkbook(stream);
     var worksheet = workbook.Worksheet(1);
@@ -222,5 +224,6 @@ app.MapGet("/api/users/sample-excel", () =>
         "user-sample-template.xlsx"
     );
 });
-
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Urls.Add($"http://0.0.0.0:{port}");
 app.Run();
