@@ -9,13 +9,16 @@ public class AppDbContext : DbContext
         : base(options)
     {
     }
+public DbSet<User> Users { get; set; }
 
-    public DbSet<User> Users => Set<User>();
+public DbSet<Company> Companies { get; set; }
+public DbSet<UserImage> UserImages { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<User>()
-            .HasIndex(x => x.UserCode)
-            .IsUnique();
-    }
+   protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    modelBuilder.Entity<User>()
+        .HasOne(x => x.Company)
+        .WithMany(x => x.Users)
+        .HasForeignKey(x => x.CompanyId);
+}
 }
