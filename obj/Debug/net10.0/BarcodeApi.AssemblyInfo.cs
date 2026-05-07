@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BarcodeApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2a8e46d651dfc234eeff3dd1bc26ba589f275ecf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f815350dd26f1ac446b287066ea59b1783f8a01d")]
 [assembly: System.Reflection.AssemblyProductAttribute("BarcodeApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BarcodeApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

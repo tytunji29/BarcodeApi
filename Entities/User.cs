@@ -11,4 +11,5 @@ public class User
     public string Email { get; set; } = default!;
 
     public string Age { get; set; }
+    public string PhoneNumber { get;  set; }
 }
