@@ -55,8 +55,8 @@ public class UserService : IUserService
         {
 
 ApplicationId=Guid.NewGuid(),
-BiometricCaptureDate=request.BiometricCaptureDate,
-LastRenewalDate=request.LastRenewalDate,
+BiometricCaptureDate=request.BiometricCaptureDate.Value.ToUniversalTime(),
+LastRenewalDate=request.LastRenewalDate.Value.ToUniversalTime(),
 Email = request.Email,
 Nin = request.Nin,
 Gender = request.Gender,
