@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/elvisonobo/Documents/Ty/BarcodeApi/BarcodeApi.csproj": {}
+    "/Users/temidayooyetunji/Desktop/BarcodeApi/BarcodeApi.csproj": {}
   },
   "projects": {
-    "/Users/elvisonobo/Documents/Ty/BarcodeApi/BarcodeApi.csproj": {
+    "/Users/temidayooyetunji/Desktop/BarcodeApi/BarcodeApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/elvisonobo/Documents/Ty/BarcodeApi/BarcodeApi.csproj",
+        "projectUniqueName": "/Users/temidayooyetunji/Desktop/BarcodeApi/BarcodeApi.csproj",
         "projectName": "BarcodeApi",
-        "projectPath": "/Users/elvisonobo/Documents/Ty/BarcodeApi/BarcodeApi.csproj",
-        "packagesPath": "/Users/elvisonobo/.nuget/packages/",
-        "outputPath": "/Users/elvisonobo/Documents/Ty/BarcodeApi/obj/",
+        "projectPath": "/Users/temidayooyetunji/Desktop/BarcodeApi/BarcodeApi.csproj",
+        "packagesPath": "/Users/temidayooyetunji/.nuget/packages/",
+        "outputPath": "/Users/temidayooyetunji/Desktop/BarcodeApi/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/elvisonobo/.nuget/NuGet/NuGet.Config"
+          "/Users/temidayooyetunji/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -110,7 +110,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
