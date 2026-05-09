@@ -16,6 +16,8 @@ using iText.Layout.Properties;
 using iText.Layout.Borders;
 using iText.IO.Font.Constants;
 using iText.Kernel.Font;
+using PuppeteerSharp;
+using PuppeteerSharp.Media;
 
 namespace BarcodeApi.Services;
 public interface IQrCodeService
@@ -33,165 +35,69 @@ public class QrCodeService : IQrCodeService
 
 public async Task<byte[]> GeneratePermitPdf(Guid userId)
 {
-    var user = await _db.Users
+    var model = await _db.Users
         .Include(x => x.Company)
         .FirstOrDefaultAsync(x => x.Id == userId);
 
-    if (user == null)
+    if (model == null)
         return null;
 
     var userimage = await _db.UserImages
         .FirstOrDefaultAsync(x => x.UserId == userId);
 
-    var qrCodeBytes = await GenerateUserQrCode(user.Id);
+    var qrCodeBytes = await GenerateUserQrCode(model.Id);
+var pic =$"data:image/png;base64,{userimage.ImageData}";
+var qrSrc = $"data:image/png;base64,{Convert.ToBase64String(qrCodeBytes)}";
+    // Read HTML template
+    var templatePath = Path.Combine(Directory.GetCurrentDirectory(),
+        "Helpers",
+        "htmlhelper.html");
 
-    using var stream = new MemoryStream();
+    var html = await File.ReadAllTextAsync(templatePath);
 
-    var writer = new PdfWriter(stream);
-    var pdf = new PdfDocument(writer);
-    var document = new Document(pdf);
-
-    document.SetMargins(10, 10, 10, 10);
-
-    // =====================================================
-    // MAIN TABLE
-    // =====================================================
-
-    var mainTable = new Table(UnitValue.CreatePercentArray(new float[] { 70, 30 }))
-        .UseAllAvailableWidth();
-
-    // =====================================================
-    // LEFT SECTION
-    // =====================================================
-
-    var leftCell = new Cell();
-
-    // ================= HEADER =================
-
-    var headerTable = new Table(UnitValue.CreatePercentArray(new float[] { 15, 85 }))
-        .UseAllAvailableWidth();
-
-    // LOGO
-    var logo = new Paragraph("🇳🇬")
-        .SetFontSize(40);
-
-    headerTable.AddCell(
-        new Cell()
-            .Add(logo)
-            .SetBorder(Border.NO_BORDER)
-    );
-
-    // HEADER TEXT
-    headerTable.AddCell(
-        new Cell()
-            .Add(new Paragraph("FEDERAL REPUBLIC OF NIGERIA")
-    .SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD))
-                .SetFontSize(20))
-            .Add(new Paragraph("Electronic Comprehensive Expatriate Residence Permit"))
-            .SetBorder(Border.NO_BORDER)
-    );
-
-    leftCell.Add(headerTable);
-
-    leftCell.Add(new Paragraph("\n"));
-
-    // ================= DETAILS TABLE =================
-
-    var detailsTable = new Table(UnitValue.CreatePercentArray(new float[] { 40, 60 }))
-        .UseAllAvailableWidth();
-
-    detailsTable.AddCell(CreateLabelCell("e-CERPAC:"));
-    detailsTable.AddCell(CreateValueCell(user.ECerpacNumber));
-
-    detailsTable.AddCell(CreateLabelCell("Insurance Policy Number:"));
-    detailsTable.AddCell(CreateValueCell(user.PolicyNumber));
-    detailsTable.AddCell(CreateLabelCell("First Name:"));
-    detailsTable.AddCell(CreateValueCell(user.FirstName));
-
-    detailsTable.AddCell(CreateLabelCell("Middle Name:"));
-    detailsTable.AddCell(CreateValueCell(user.MiddleName));
-    detailsTable.AddCell(CreateLabelCell("Last Name:"));
-    detailsTable.AddCell(CreateValueCell(user.LastName));
-
-    detailsTable.AddCell(CreateLabelCell("Date of Birth:"));
-    detailsTable.AddCell(CreateValueCell(user.DateOfBirth.ToString("dd MMM yyyy")));
-
-    detailsTable.AddCell(CreateLabelCell("Status:"));
-    detailsTable.AddCell(CreateValueCell(user.Status));
-
-    detailsTable.AddCell(CreateLabelCell("Validity:"));
-    detailsTable.AddCell(CreateValueCell($"{user.ValidityStartDate:dd MMM yyyy} - {user.ValidityEndDate:dd MMM yyyy}"));
-
-    leftCell.Add(detailsTable);
-
-    mainTable.AddCell(leftCell);
-
-    // =====================================================
-    // RIGHT SECTION
-    // =====================================================
-
-    var rightCell = new Cell();
-
-    rightCell.Add(
-        new Paragraph("e-CERPAC")
-    .SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD))
-            .SetFontSize(22)
-            .SetTextAlignment(TextAlignment.CENTER)
-    );
-
-    rightCell.Add(new Paragraph("\n"));
-
-    // ================= USER IMAGE =================
-
-    if (userimage != null && !string.IsNullOrWhiteSpace(userimage.ImageData))
+    // Replace variables
+    html = html.Replace("{{CerpacNumber}}", model.ECerpacNumber ?? "");
+    html = html.Replace("{{InsurancePolicyNumber}}", model.PolicyNumber ?? "");
+    html = html.Replace("{{FirstName}}", model.FirstName ?? "");
+    html = html.Replace("{{MiddleName}}", model.MiddleName ?? "");
+    html = html.Replace("{{LastName}}", model.LastName ?? "");
+    html = html.Replace("{{DateOfBirth}}", model.DateOfBirth.ToString("dd MMM yyyy") ?? "");
+    html = html.Replace("{{Status}}", model.Status ?? "");
+    html = html.Replace("{{ValidFrom}}", model.ValidityStartDate.ToString("dd MMM yyyy") ?? "");
+    html = html.Replace("{{ValidTo}}", model.ValidityEndDate.ToString("dd MMM yyyy") ?? "");
+    html = html.Replace("{{PhotoSrc}}", pic);
+    html = html.Replace("{{QrCodeSrc}}", qrSrc );
+await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+{
+    Headless = true,
+    ExecutablePath = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    Args = new[]
     {
-        var base64 = userimage.ImageData;
-
-        if (base64.Contains(","))
-        {
-            base64 = base64.Split(',')[1];
-        }
-
-        byte[] imageBytes = Convert.FromBase64String(base64);
-
-        var profileImage =  new iText.Layout.Element.Image(ImageDataFactory.Create(imageBytes))
-            .SetWidth(150)
-            .SetHeight(150)
-            .SetHorizontalAlignment(HorizontalAlignment.CENTER);
-
-        rightCell.Add(profileImage);
+        "--no-sandbox",
+        "--disable-dev-shm-usage"
     }
+});
 
-    rightCell.Add(new Paragraph("\n"));
+await using var page = await browser.NewPageAsync();
 
-    // ================= QR CODE =================
+await page.SetContentAsync(html, new NavigationOptions
+{
+    WaitUntil = new[]
+    {
+        WaitUntilNavigation.DOMContentLoaded
+    },
+    Timeout = 0
+});
 
-    var qrImage =  new iText.Layout.Element.Image(ImageDataFactory.Create(qrCodeBytes))
-        .SetWidth(150)
-        .SetHeight(150)
-        .SetHorizontalAlignment(HorizontalAlignment.CENTER);
+var pdfBytes = await page.PdfDataAsync(new PdfOptions
+{
+    Format = PaperFormat.A4,
+    PrintBackground = true,
+    PreferCSSPageSize = true
+});
 
-    rightCell.Add(qrImage);
+return pdfBytes;
 
-    mainTable.AddCell(rightCell);
-
-    // =====================================================
-    // ADD MAIN TABLE
-    // =====================================================
-
-    document.Add(mainTable);
-
-    // ================= FOOTER =================
-
-    document.Add(
-        new Paragraph($"Generated on {DateTime.UtcNow:dd MMM yyyy}")
-            .SetFontSize(10)
-            .SetTextAlignment(TextAlignment.CENTER)
-    );
-
-    document.Close();
-
-    return stream.ToArray();
 }
 
 

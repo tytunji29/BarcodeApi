@@ -683,6 +683,19 @@
           "buildTransitive/net8.0/_._": {}
         }
       },
+      "Microsoft.IO.RecyclableMemoryStream/3.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/Microsoft.IO.RecyclableMemoryStream.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Microsoft.IO.RecyclableMemoryStream.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.OpenApi/2.4.1": {
         "type": "package",
         "compile": {
@@ -786,6 +799,23 @@
         },
         "runtime": {
           "lib/net10.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "PuppeteerSharp/24.42.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IO.RecyclableMemoryStream": "3.0.1",
+          "WebDriverBiDi": "0.0.49"
+        },
+        "compile": {
+          "lib/net10.0/PuppeteerSharp.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/PuppeteerSharp.dll": {
             "related": ".xml"
           }
         }
@@ -1069,6 +1099,19 @@
         },
         "build": {
           "buildTransitive/net6.0/_._": {}
+        }
+      },
+      "WebDriverBiDi/0.0.49": {
+        "type": "package",
+        "compile": {
+          "lib/net10.0/WebDriverBiDi.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/WebDriverBiDi.dll": {
+            "related": ".xml"
+          }
         }
       },
       "ZXing.Net/0.16.11": {
@@ -2811,6 +2854,24 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "Microsoft.IO.RecyclableMemoryStream/3.0.1": {
+      "sha512": "s/s20YTVY9r9TPfTrN5g8zPF1YhwxyqO6PxUkrYTGI2B+OGPe9AdajWZrLhFqXIvqIW23fnUE4+ztrUWNU1+9g==",
+      "type": "package",
+      "path": "microsoft.io.recyclablememorystream/3.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net6.0/Microsoft.IO.RecyclableMemoryStream.dll",
+        "lib/net6.0/Microsoft.IO.RecyclableMemoryStream.xml",
+        "lib/netstandard2.0/Microsoft.IO.RecyclableMemoryStream.dll",
+        "lib/netstandard2.0/Microsoft.IO.RecyclableMemoryStream.xml",
+        "lib/netstandard2.1/Microsoft.IO.RecyclableMemoryStream.dll",
+        "lib/netstandard2.1/Microsoft.IO.RecyclableMemoryStream.xml",
+        "microsoft.io.recyclablememorystream.3.0.1.nupkg.sha512",
+        "microsoft.io.recyclablememorystream.nuspec"
+      ]
+    },
     "Microsoft.OpenApi/2.4.1": {
       "sha512": "u7QhXCISMQuab3flasb1hoaiERmUqyWsW7tmQODyILoQ7mJV5IRGM+2KKZYo0QUfC13evEOcHAb6TPWgqEQtrw==",
       "type": "package",
@@ -2961,6 +3022,24 @@
         "npgsql.entityframeworkcore.postgresql.10.0.1.nupkg.sha512",
         "npgsql.entityframeworkcore.postgresql.nuspec",
         "postgresql.png"
+      ]
+    },
+    "PuppeteerSharp/24.42.0": {
+      "sha512": "t019+FnCRx4aH9bTRqwcDrhjqcuJ3+Da3ijmYw/dmH/3UzPbcdhjRxESG725Kz6o1W0sL5AjPRQwwo0n/cX1Uw==",
+      "type": "package",
+      "path": "puppeteersharp/24.42.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net10.0/PuppeteerSharp.dll",
+        "lib/net10.0/PuppeteerSharp.xml",
+        "lib/net8.0/PuppeteerSharp.dll",
+        "lib/net8.0/PuppeteerSharp.xml",
+        "lib/netstandard2.0/PuppeteerSharp.dll",
+        "lib/netstandard2.0/PuppeteerSharp.xml",
+        "puppeteersharp.24.42.0.nupkg.sha512",
+        "puppeteersharp.nuspec"
       ]
     },
     "RBush.Signed/4.0.0": {
@@ -3360,6 +3439,26 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "WebDriverBiDi/0.0.49": {
+      "sha512": "KXTJjGny4f4yO+HJGMMgX+qaWqweQvcrtMQPkUw+lw2nUQpJV0VfE3oW4t25bgXOq62cdE9yVEVSjssKRBa98A==",
+      "type": "package",
+      "path": "webdriverbidi/0.0.49",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net10.0/WebDriverBiDi.dll",
+        "lib/net10.0/WebDriverBiDi.xml",
+        "lib/net8.0/WebDriverBiDi.dll",
+        "lib/net8.0/WebDriverBiDi.xml",
+        "lib/net9.0/WebDriverBiDi.dll",
+        "lib/net9.0/WebDriverBiDi.xml",
+        "lib/netstandard2.0/WebDriverBiDi.dll",
+        "lib/netstandard2.0/WebDriverBiDi.xml",
+        "webdriverbidi.0.0.49.nupkg.sha512",
+        "webdriverbidi.nuspec"
+      ]
+    },
     "ZXing.Net/0.16.11": {
       "sha512": "OZfAVu88hl87BffQ+rlWCj/vLvAhhCK4QnFaoveeF/MY8SjHNSYBQ3qyUEWlPKNgBQGh1syXhCDg10vUnCsqkg==",
       "type": "package",
@@ -3456,6 +3555,7 @@
       "Microsoft.AspNetCore.OpenApi >= 10.0.0",
       "Microsoft.EntityFrameworkCore.Design >= 10.0.7",
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 10.0.1",
+      "PuppeteerSharp >= 24.42.0",
       "SixLabors.ImageSharp >= 3.1.12",
       "Swashbuckle.AspNetCore >= 10.1.7",
       "System.Drawing.Common >= 10.0.7",
@@ -3528,6 +3628,10 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": {
             "target": "Package",
             "version": "[10.0.1, )"
+          },
+          "PuppeteerSharp": {
+            "target": "Package",
+            "version": "[24.42.0, )"
           },
           "SixLabors.ImageSharp": {
             "target": "Package",

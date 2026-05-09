@@ -116,5 +116,5 @@ app.MapGet("/api/users/sample-excel", () =>
     pattern: "{controller=Verify}/{action=Index}/{id?}");
 
 app.MapDefaultControllerRoute();
-
+app.UseStaticFiles();
 app.Run();

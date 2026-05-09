@@ -156,3 +156,7 @@
 /Users/elvisonobo/Documents/Ty/BarcodeApi/obj/Debug/net10.0/BarcodeApi.pdb
 /Users/elvisonobo/Documents/Ty/BarcodeApi/obj/Debug/net10.0/BarcodeApi.genruntimeconfig.cache
 /Users/elvisonobo/Documents/Ty/BarcodeApi/obj/Debug/net10.0/ref/BarcodeApi.dll
+/Users/elvisonobo/Documents/Ty/BarcodeApi/bin/Debug/net10.0/Microsoft.IO.RecyclableMemoryStream.dll
+/Users/elvisonobo/Documents/Ty/BarcodeApi/bin/Debug/net10.0/PuppeteerSharp.dll
+/Users/elvisonobo/Documents/Ty/BarcodeApi/bin/Debug/net10.0/WebDriverBiDi.dll
+/Users/elvisonobo/Documents/Ty/BarcodeApi/bin/Debug/net10.0/BarcodeApi.staticwebassets.runtime.json
