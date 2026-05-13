@@ -54,17 +54,9 @@ public class UserService : IUserService
         var user = new User
         {
 
-ApplicationId=Guid.NewGuid(),
 BiometricCaptureDate=request.BiometricCaptureDate.Value.ToUniversalTime(),
 LastRenewalDate=request.LastRenewalDate.Value.ToUniversalTime(),
-Email = request.Email,
-Nin = request.Nin,
 Gender = request.Gender,
-PhoneNumber = request.PhoneNumber,
-Address = request.Address,
-Occupation = request.Occupation,
-ResidencePermitType = request.ResidencePermitType,
-PlaceOfBirth = request.PlaceOfBirth,
     ECerpacNumber = request.ECerpacNumber,
 
     DateOfExpiry = request.DateOfExpiry.ToUniversalTime(),
@@ -78,18 +70,14 @@ PlaceOfBirth = request.PlaceOfBirth,
     LastName = request.LastName,
 
     DateOfBirth = request.DateOfBirth.ToUniversalTime(),
-
-    Sex = request.Sex,
     PolicyNumber=$"GEN/{DateTime.UtcNow:yyyyMMdd}/{Random.Shared.Next(10000, 99999)}",
-    Status="Expatriate",
+    Status=request.Status,
 
     Nationality = request.Nationality,
 
     ValidityStartDate = request.ValidityStartDate.ToUniversalTime(),
 
     ValidityEndDate = request.ValidityEndDate.ToUniversalTime(),
-
-    ResidentClass = request.ResidentClass,
 
     Designation = request.Designation,
 
@@ -129,6 +117,9 @@ public async Task<CerpacViewModel> GetDetial(Guid userId)
 
     return new CerpacViewModel
     {
+        FirstName= user.FirstName,
+        LastName = user.LastName,
+        MiddleName = user.MiddleName,
         FullName = $"{user.FirstName} {user.LastName}",
         DateOfBirth = user.DateOfBirth.ToString("yyyy-MM-dd"),
         Nationality = user.Nationality ?? string.Empty,
@@ -141,22 +132,67 @@ public async Task<CerpacViewModel> GetDetial(Guid userId)
         IssuingAuthority = user.Company?.CompanyName ?? string.Empty,
         Status = user.Status ?? string.Empty,
 
-        BiometricCaptureDate = user.BiometricCaptureDate?.ToString("yyyy-MM-dd") ?? string.Empty,
-        LastRenewalDate = user.LastRenewalDate?.ToString("yyyy-MM-dd") ?? string.Empty,
+       // BiometricCaptureDate = user.BiometricCaptureDate?.ToString("yyyy-MM-dd") ?? string.Empty,
+        //LastRenewalDate = user.LastRenewalDate?.ToString("yyyy-MM-dd") ?? string.Empty,
 
-        ApplicationId = user.ApplicationId?.ToString() ?? string.Empty,
-        Email = user.Email ?? string.Empty,
- ResidencePermitType = user.ResidencePermitType ?? string.Empty,
+CountryInitial=GetCountryInitial(user.Nationality ?? string.Empty),
+       // ApplicationId = user.ApplicationId?.ToString() ?? string.Empty,
+       // Email = user.Email ?? string.Empty,
+ //ResidencePermitType = user.ResidencePermitType ?? string.Empty,
 
+CompanyEmail=user.Company?.CompanyEmail ?? string.Empty,
+CompanyName=user.Company?.CompanyName ?? string.Empty,
+CompanyRCNumber=user.Company?.CompanyRCNumber ?? string.Empty,
+CompanyRegisteredAddress=user.Company?.CompanyRegisteredAddress ?? string.Empty,
+CompanyTelephone=user.Company?.CompanyTelephone ?? string.Empty,
+Designation=user.Designation ?? string.Empty,
 
-        PlaceOfBirth = user.PlaceOfBirth ?? string.Empty,
+       // PlaceOfBirth = user.PlaceOfBirth ?? string.Empty,
         Gender = user.Gender ?? string.Empty,
-        NinNumber = user.Nin ?? string.Empty,
-        PhoneNumber = user.PhoneNumber ?? string.Empty,
-        ResidentialAddress = user.Address ?? string.Empty,
-        Occupation = user.Occupation ?? string.Empty,     
+       // NinNumber = user.Nin ?? string.Empty,
+       // PhoneNumber = user.PhoneNumber ?? string.Empty,
+       // ResidentialAddress = user.Address ?? string.Empty,
+       // Occupation = user.Occupation ?? string.Empty,     
         ProfileInitials = GenerateInitials(user.FirstName, user.LastName)
     };
+}
+
+public static string GetCountryInitial(string countryName)
+{
+    if (string.IsNullOrWhiteSpace(countryName))
+        return string.Empty;
+
+    var countryCodes = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        { "Nigeria", "ng" },
+        { "United States", "us" },
+        { "United Kingdom", "gb" },
+        { "Canada", "ca" },
+        { "Germany", "de" },
+        { "France", "fr" },
+        { "Italy", "it" },
+        { "Spain", "es" },
+        { "China", "cn" },
+        { "Japan", "jp" },
+        { "India", "in" },
+        { "South Africa", "za" },
+        { "Ghana", "gh" },
+        { "Kenya", "ke" },
+        { "Brazil", "br" },
+        { "Mexico", "mx" },
+        { "Russia", "ru" },
+        { "Netherlands", "nl" },
+        { "Sweden", "se" },
+        { "Norway", "no" },
+        { "Denmark", "dk" },
+        { "Finland", "fi" },
+        { "Australia", "au" },
+        { "New Zealand", "nz" }
+    };
+
+    return countryCodes.TryGetValue(countryName.Trim(), out var code)
+        ? code
+        : string.Empty;
 }
 
 private string GenerateInitials(string firstName, string lastName)
