@@ -131,7 +131,7 @@ public async Task<CerpacViewModel> GetDetial(Guid userId)
 
         IssuingAuthority = user.Company?.CompanyName ?? string.Empty,
         Status = user.Status ?? string.Empty,
-
+Picture=userimage.ImageData??string.Empty,
        // BiometricCaptureDate = user.BiometricCaptureDate?.ToString("yyyy-MM-dd") ?? string.Empty,
         //LastRenewalDate = user.LastRenewalDate?.ToString("yyyy-MM-dd") ?? string.Empty,
 
