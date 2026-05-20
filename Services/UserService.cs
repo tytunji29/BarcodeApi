@@ -121,13 +121,13 @@ public async Task<CerpacViewModel> GetDetial(Guid userId)
         LastName = user.LastName,
         MiddleName = user.MiddleName,
         FullName = $"{user.FirstName} {user.LastName}",
-        DateOfBirth = user.DateOfBirth.ToString("dd-MMM-yyyy"),
+        DateOfBirth = user.DateOfBirth.ToString("dd MMM yyyy"),
         Nationality = user.Nationality ?? string.Empty,
         PassportNumber = user.PassportNumber ?? string.Empty,
 
         CerpacNumber = user.ECerpacNumber ?? string.Empty,
-          IssueDate = user.ValidityStartDate.ToString("dd-MMM-yyyy") ?? string.Empty,
-        ExpiryDate = user.ValidityEndDate.ToString("dd-MMM-yyyy") ?? string.Empty,
+          IssueDate = user.ValidityStartDate.ToString("dd MMM yyyy") ?? string.Empty,
+        ExpiryDate = user.ValidityEndDate.ToString("dd MMM yyyy") ?? string.Empty,
 
         IssuingAuthority = user.Company?.CompanyName ?? string.Empty,
         Status = user.Status ?? string.Empty,
