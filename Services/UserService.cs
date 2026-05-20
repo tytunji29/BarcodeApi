@@ -69,15 +69,15 @@ Gender = request.Gender,
 
     LastName = request.LastName,
 
-    DateOfBirth = request.DateOfBirth.ToUniversalTime(),
+    DateOfBirth = request.DateOfBirth,
     PolicyNumber=$"GEN/{DateTime.UtcNow:yyyyMMdd}/{Random.Shared.Next(10000, 99999)}",
     Status=request.Status,
 
     Nationality = request.Nationality,
 
-    ValidityStartDate = request.ValidityStartDate.ToUniversalTime(),
+    ValidityStartDate = request.ValidityStartDate,
 
-    ValidityEndDate = request.ValidityEndDate.ToUniversalTime(),
+    ValidityEndDate = request.ValidityEndDate,
 
     Designation = request.Designation,
 
@@ -121,13 +121,13 @@ public async Task<CerpacViewModel> GetDetial(Guid userId)
         LastName = user.LastName,
         MiddleName = user.MiddleName,
         FullName = $"{user.FirstName} {user.LastName}",
-        DateOfBirth = user.DateOfBirth.ToString("yyyy-MM-dd"),
+        DateOfBirth = user.DateOfBirth.ToString("dd-MMM-yyyy"),
         Nationality = user.Nationality ?? string.Empty,
         PassportNumber = user.PassportNumber ?? string.Empty,
 
         CerpacNumber = user.ECerpacNumber ?? string.Empty,
-          IssueDate = user.ValidityStartDate.ToString("yyyy-MM-dd") ?? string.Empty,
-        ExpiryDate = user.ValidityEndDate.ToString("yyyy-MM-dd") ?? string.Empty,
+          IssueDate = user.ValidityStartDate.ToString("dd-MMM-yyyy") ?? string.Empty,
+        ExpiryDate = user.ValidityEndDate.ToString("dd-MMM-yyyy") ?? string.Empty,
 
         IssuingAuthority = user.Company?.CompanyName ?? string.Empty,
         Status = user.Status ?? string.Empty,
