@@ -120,7 +120,7 @@ private Cell CreateValueCell(string? text)
 }
  private async Task<byte[]> GenerateUserQrCode(Guid userId)
     {
-        var qrContent = $"https://barcodeapi-cwc7.onrender.com/verify/index?applicationId={userId}";
+        var qrContent = $"https://cerpac-immgration.gof.ng/verify/index?applicationId={userId}";
         var writer = new BarcodeWriterPixelData
         {
             Format = BarcodeFormat.QR_CODE,
