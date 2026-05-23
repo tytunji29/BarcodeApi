@@ -1,0 +1,50 @@
+## Build results
+bin/
+obj/
+out/
+publish/
+
+## Visual Studio
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## ASP.NET Core
+appsettings.Development.json
+wwwroot/lib/
+node_modules/
+
+## Logs
+logs/
+*.log
+
+## EF Core migrations local artifacts
+Migrations/*Designer.cs
+Migrations/*.Snapshot.cs
+
+## Build artifacts
+*.dll
+*.exe
+*.pdb
+*.cache
+*.dll.config
+
+## Rider / JetBrains
+.idea/
+
+## OS files
+.DS_Store
+Thumbs.db
+
+## Docker (optional local overrides)
+docker-compose.override.yml
+
+## Secrets
+secrets.json
+*.secrets.json
+
+## Publish outputs
+**/Properties/PublishProfiles/

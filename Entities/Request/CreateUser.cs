@@ -8,6 +8,7 @@ public class CreateUser{
     public string PassportNumber { get; set; }
 
     public string FirstName { get; set; }
+    public DateTime GeneratedDay { get; set; }
 
     public string MiddleName { get; set; }
 

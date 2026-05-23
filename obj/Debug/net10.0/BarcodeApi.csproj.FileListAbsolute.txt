@@ -160,3 +160,9 @@
 /Users/elvisonobo/Documents/Ty/BarcodeApi/bin/Debug/net10.0/PuppeteerSharp.dll
 /Users/elvisonobo/Documents/Ty/BarcodeApi/bin/Debug/net10.0/WebDriverBiDi.dll
 /Users/elvisonobo/Documents/Ty/BarcodeApi/bin/Debug/net10.0/BarcodeApi.staticwebassets.runtime.json
+/Users/elvisonobo/Documents/Ty/BarcodeApi/bin/Debug/net10.0/publish/web.config
+/Users/elvisonobo/Documents/Ty/BarcodeApi/bin/Debug/net10.0/publish/appsettings.Development.json
+/Users/elvisonobo/Documents/Ty/BarcodeApi/bin/Debug/net10.0/publish/appsettings.json
+/Users/elvisonobo/Documents/Ty/BarcodeApi/bin/Debug/net10.0/publish/BarcodeApi.deps.json
+/Users/elvisonobo/Documents/Ty/BarcodeApi/bin/Debug/net10.0/publish/BarcodeApi.runtimeconfig.json
+/Users/elvisonobo/Documents/Ty/BarcodeApi/bin/Debug/net10.0/publish/BarcodeApi.staticwebassets.endpoints.json

@@ -50,16 +50,15 @@ public class UserService : IUserService
 
             await _db.Companies.AddAsync(company);
         }
+      var user = new User
+{
+    BiometricCaptureDate = request.BiometricCaptureDate.Value.Date,
+    LastRenewalDate = request.LastRenewalDate.Value.Date,
 
-        var user = new User
-        {
-
-BiometricCaptureDate=request.BiometricCaptureDate.Value.ToUniversalTime(),
-LastRenewalDate=request.LastRenewalDate.Value.ToUniversalTime(),
-Gender = request.Gender,
+    Gender = request.Gender,
     ECerpacNumber = request.ECerpacNumber,
 
-    DateOfExpiry = request.DateOfExpiry.ToUniversalTime(),
+    DateOfExpiry = request.DateOfExpiry.Date,
 
     PassportNumber = request.PassportNumber,
 
@@ -69,21 +68,22 @@ Gender = request.Gender,
 
     LastName = request.LastName,
 
-    DateOfBirth = request.DateOfBirth,
-    PolicyNumber=$"GEN/{DateTime.UtcNow:yyyyMMdd}/{Random.Shared.Next(10000, 99999)}",
-    Status=request.Status,
+    DateOfBirth = request.DateOfBirth.Date,
+
+    PolicyNumber = $"GEN/{request.GeneratedDay:yyyyMMdd}/{Random.Shared.Next(10000, 99999)}",
+
+    Status = request.Status,
 
     Nationality = request.Nationality,
 
-    ValidityStartDate = request.ValidityStartDate,
+    ValidityStartDate = request.ValidityStartDate.Date,
 
-    ValidityEndDate = request.ValidityEndDate,
+    ValidityEndDate = request.ValidityEndDate.Date,
 
     Designation = request.Designation,
 
     CompanyId = company.Id
 };
-
         await _db.Users.AddAsync(user);
 
 var userImage = new UserImage
