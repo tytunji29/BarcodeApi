@@ -1,3 +1,4 @@
+using System.Text.Json;
 using BarcodeApi.Data;
 using BarcodeApi.Entities;
 using BarcodeApi.Entities.Request;
@@ -52,13 +53,9 @@ public class UserService : IUserService
         }
       var user = new User
 {
-    BiometricCaptureDate = request.BiometricCaptureDate.Value.Date,
-    LastRenewalDate = request.LastRenewalDate.Value.Date,
 
     Gender = request.Gender,
     ECerpacNumber = request.ECerpacNumber,
-
-    DateOfExpiry = request.DateOfExpiry.Date,
 
     PassportNumber = request.PassportNumber,
 
@@ -67,18 +64,18 @@ public class UserService : IUserService
     MiddleName = request.MiddleName,
 
     LastName = request.LastName,
-
-    DateOfBirth = request.DateOfBirth.Date,
-
+DateOfBirth = DateTime.SpecifyKind(request.DateOfBirth.Date, DateTimeKind.Utc),
+DateOfExpiry = DateTime.SpecifyKind(request.DateOfExpiry.Date, DateTimeKind.Utc),
+ValidityStartDate = DateTime.SpecifyKind(request.ValidityStartDate.Date, DateTimeKind.Utc),
+ValidityEndDate = DateTime.SpecifyKind(request.ValidityEndDate.Date, DateTimeKind.Utc),
+BiometricCaptureDate = DateTime.SpecifyKind(request.BiometricCaptureDate.Value.Date, DateTimeKind.Utc),
+LastRenewalDate = DateTime.SpecifyKind(request.LastRenewalDate.Value.Date, DateTimeKind.Utc),
     PolicyNumber = $"GEN/{request.GeneratedDay:yyyyMMdd}/{Random.Shared.Next(10000, 99999)}",
 
     Status = request.Status,
 
     Nationality = request.Nationality,
 
-    ValidityStartDate = request.ValidityStartDate.Date,
-
-    ValidityEndDate = request.ValidityEndDate.Date,
 
     Designation = request.Designation,
 
@@ -94,7 +91,14 @@ var userImage = new UserImage
 
             userImage.ImageData = await ConvertToBase64(request.Picture);
         await _db.UserImages.AddAsync(userImage);
-        await _db.SaveChangesAsync();
+        Console.WriteLine(
+    System.Text.Json.JsonSerializer.Serialize(user, new JsonSerializerOptions
+    {
+        WriteIndented = true,
+        ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
+    })
+);
+   await _db.SaveChangesAsync();
 
         // await _whatsAppService.SendWhatsAppMessage(user);
 
