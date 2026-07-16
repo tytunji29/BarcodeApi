@@ -42,7 +42,7 @@ app.UseSwagger();
 
 app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 
 // ===========================================
@@ -107,8 +107,8 @@ app.MapGet("/api/users/sample-excel", () =>
     );
 });
 
-// var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-// app.Urls.Add($"http://0.0.0.0:{port}");
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+ app.Urls.Add($"http://0.0.0.0:{port}");
 
 // MVC
  app.MapControllerRoute(
