@@ -67,16 +67,26 @@ var qrSrc = $"data:image/png;base64,{Convert.ToBase64String(qrCodeBytes)}";
     html = html.Replace("{{ValidTo}}", model.ValidityEndDate.ToString("dd MMM yyyy") ?? "");
     html = html.Replace("{{PhotoSrc}}", pic);
     html = html.Replace("{{QrCodeSrc}}", qrSrc );
-await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+  await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
 {
     Headless = true,
-    ExecutablePath = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    ExecutablePath = Environment.GetEnvironmentVariable("PUPPETEER_EXECUTABLE_PATH"),
     Args = new[]
     {
         "--no-sandbox",
-        "--disable-dev-shm-usage"
+        "--disable-setuid-sandbox"
     }
 });
+// await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+// {
+//     Headless = true,
+//     ExecutablePath = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+//     Args = new[]
+//     {
+//         "--no-sandbox",
+//         "--disable-dev-shm-usage"
+//     }
+// });
 
 await using var page = await browser.NewPageAsync();
 
