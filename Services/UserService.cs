@@ -70,7 +70,9 @@ ValidityStartDate = DateTime.SpecifyKind(request.ValidityStartDate.Date, DateTim
 ValidityEndDate = DateTime.SpecifyKind(request.ValidityEndDate.Date, DateTimeKind.Utc),
 BiometricCaptureDate = DateTime.SpecifyKind(request.BiometricCaptureDate.Value.Date, DateTimeKind.Utc),
 LastRenewalDate = DateTime.SpecifyKind(request.LastRenewalDate.Value.Date, DateTimeKind.Utc),
-    PolicyNumber = $"GEN/{request.GeneratedDay:yyyyMMdd}/{Random.Shared.Next(10000, 99999)}",
+PolicyNumber = !string.IsNullOrWhiteSpace(request.PolicyNumber)
+        ? request.PolicyNumber
+        : $"GEN/{request.GeneratedDay:yyyyMMdd}/{Random.Shared.Next(10000, 99999)}",
 
     Status = request.Status,
 

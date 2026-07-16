@@ -2,6 +2,7 @@ namespace BarcodeApi.Entities.Request;
 
 public class CreateUser{
     public string ECerpacNumber { get; set; }
+    public string PolicyNumber { get; set; }
 
     public DateTime DateOfExpiry { get; set; }
 
