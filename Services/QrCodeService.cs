@@ -67,10 +67,12 @@ var qrSrc = $"data:image/png;base64,{Convert.ToBase64String(qrCodeBytes)}";
     html = html.Replace("{{ValidTo}}", model.ValidityEndDate.ToString("dd MMM yyyy") ?? "");
     html = html.Replace("{{PhotoSrc}}", pic);
     html = html.Replace("{{QrCodeSrc}}", qrSrc );
-  await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+ var browserFetcher = new BrowserFetcher();
+await browserFetcher.DownloadAsync();
+
+var browser = await Puppeteer.LaunchAsync(new LaunchOptions
 {
     Headless = true,
-    ExecutablePath = Environment.GetEnvironmentVariable("PUPPETEER_EXECUTABLE_PATH"),
     Args = new[]
     {
         "--no-sandbox",
